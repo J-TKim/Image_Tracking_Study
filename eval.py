@@ -19,6 +19,9 @@ import os
 import argparse
 
 def convert_to_xyxy(imgWidth, imgHeight, xywh):
+    '''
+    converts the coordinates of the bbox into a ratio and returns
+    '''
     px = float(xywh[0])
     py = float(xywh[1])
     pw = float(xywh[2])
@@ -32,14 +35,15 @@ def convert_to_xyxy(imgWidth, imgHeight, xywh):
     abspw = pw / imgWidth
     absph = ph / imgHeight  
 
-    abspx = 0.999999 if abspx >= 1 else abspx
-    abspy = 0.999999 if abspy >= 1 else abspy
-    abspw = 0.999999 if abspw >= 1 else abspw
-    absph = 0.999999 if absph >= 1 else absph
-    abspx = 0.000001 if abspx < 0 else abspx
-    abspy = 0.000001 if abspy < 0 else abspy
-    abspw = 0.000001 if abspw < 0 else abspw
-    absph = 0.000001 if absph < 0 else absph
+    abspx = min(0.999999, abspx) # if abspx >= 1 else 
+    abspy = min(0.999999, abspy) # 0.999999 if abspy >= 1 else abspy
+    abspw = min(0.999999, abspw) # 0.999999 if abspw >= 1 else abspw
+    absph = min(0.999999, absph) # 0.999999 if absph >= 1 else absph
+
+    abspx = max(0.000001, abspx) # 0.000001 if abspx < 0 else abspx
+    abspy = max(0.000001, abspy) # 0.000001 if abspy < 0 else abspy
+    abspw = max(0.000001, abspw) # 0.000001 if abspw < 0 else abspw
+    absph = max(0.000001, absph) # 0.000001 if absph < 0 else absph
             
     return abspx, abspy, abspw, absph
 
@@ -58,11 +62,12 @@ device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
 if __name__ == '__main__': 
     
-    print('using {} to eval, use cpu may take an hour to complete !!'.format(device))
+    print(f'using {device} to eval, use cpu may take an hour to complete !!')
     model = SSD(opt.num_classes, opt.anchor_num)
     
-    print('loading checkpoint from {}'.format(checkpoint))
-    state_dict = torch.load(checkpoint, map_location=None if torch.cuda.is_available() else 'cpu')
+    # load model
+    print(f'loading checkpoint from {checkpoint}')
+    state_dict = torch.load(checkpoint, map_location=device) # None if torch.cuda.is_available() else 'cpu')
     model.load_state_dict(state_dict)
     model.to(device)
     print('model loaded')
@@ -105,7 +110,7 @@ if __name__ == '__main__':
         
         for box, label, score in zip(gt_boxes, gt_labels, gt_confs):
             box[0],box[1],box[2],box[3] = convert_to_xyxy(w,h,[box[0],box[1],box[2],box[3]])
-            wr.writerow([img_name,list(PERSON_LABELS)[label],"{:.3f}".format(score),"{:.8f}".format(box[0]),"{:.8f}".format(box[1]),"{:.8f}".format(box[2]),"{:.8f}".format(box[3])])
+            wr.writerow([img_name,list(PERSON_LABELS)[label],f"{score:.3f}", f"{box[0]:.8f}",f"{box[1]:.8f}", f"{box2:.8f}", f"{box[3]:.8f}"])
 
     
     f.close()
