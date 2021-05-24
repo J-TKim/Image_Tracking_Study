@@ -28,7 +28,7 @@ class CCTVDetection(data.Dataset):
         self.opt = opt
         self.ids = []
         root = 'dataset'
-        s
+        
         # train mode
         if self.is_train:
             img_file = os.path.join(root,'train_img/*')
