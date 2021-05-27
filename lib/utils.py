@@ -1,10 +1,6 @@
-
-
 import numpy as np
 import torch
 import cv2
-
-
 
 
 def point_form(boxes):
@@ -23,7 +19,6 @@ def detection_collate(batch):
         imgs.append(sample[0])
         targets.append(sample[1])
     return torch.stack(imgs), np.array(targets)
-
 
 
 def bbox_iou(box_a, box_b):
@@ -69,8 +64,6 @@ def nms(boxes, score, threshold=0.4):
     return pick
 
 
-
-
 def detect(locations, scores, nms_threshold, gt_threshold):
 
     scores = scores[:, 1:] 
@@ -107,9 +100,6 @@ def detect(locations, scores, nms_threshold, gt_threshold):
     keep_labels = np.array(keep_labels).reshape(-1)
 
     return keep_boxes, keep_confs, keep_labels
-
-
-
 
 
 def draw_rectangle(src_img, labels, conf, locations, label_map):

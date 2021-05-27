@@ -121,6 +121,7 @@ if __name__ == '__main__':
                 avg_cls = total_cls_loss / (i+1)
                 avg_loss = total_loss / (i+1)
                 print(f'epoch[{e}] | batch_idx[{i}] | loc_loss [{avg_loc:.2f}] | cls_loss [{avg_cls:.2f}] | avg_loss [{avg_loss:.2f}]')
-
+        
+        # add early stopping later
         if (e+1) % 1 == 0:
             torch.save(model.state_dict(), os.path.join(opt.save_folder, 'loss-{:.2f}.pth'.format(total_loss)))

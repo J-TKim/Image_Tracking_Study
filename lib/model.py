@@ -32,7 +32,7 @@ class L2Norm(nn.Module):
 
 def VGG():
     base_vgg = models.vgg16().features
-    base_vgg[16].ceil_mode = True
+    base_vgg[16].ceil_mode = True # to ceil pooling
     vgg = []
     for i in range(30):
         vgg.append(base_vgg[i])
@@ -77,12 +77,8 @@ def Feature_extractor(vgg, extral, bboxes, num_classes):
                                  * 4, kernel_size=3, padding=1)]
         conf_layers += [nn.Conv2d(v.out_channels, bboxes[k]
                                   * num_classes, kernel_size=3, padding=1)]
-        
-    
     
     return loc_layers, conf_layers 
-
-
 
 
 class SSD(nn.Module):

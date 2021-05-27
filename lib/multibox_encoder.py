@@ -75,7 +75,3 @@ if __name__ == '__main__':
     mb = MultiBoxEncoder(opt)
 
     print(mb.default_boxes[:10])
-    
-
-
-
