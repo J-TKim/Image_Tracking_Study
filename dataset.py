@@ -28,13 +28,13 @@ class CCTVDetection(data.Dataset):
         self.opt = opt
         self.ids = []
         root = 'dataset'
-        s
+        
         # train mode
         if self.is_train:
             img_file = os.path.join(root,'train_img/*')
             ano_file = os.path.join(root,'train_label/*')
             file_list = glob.glob(img_file)
-            file_list_img = [file for file in file_list if file.endswith(".jpg")]
+            file_list_img = [file for idx, file in enumerate(file_list) if file.endswith(".jpg") and idx < 4000]
 
             for i in file_list_img:
                 # file_name = i[14:-4]

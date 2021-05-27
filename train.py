@@ -10,8 +10,20 @@ from lib.ssd_loss import MultiBoxLoss
 from dataset import CCTVDetection
 
 
-# device = torch.device('cuda')
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+if torch.cuda.is_available():    
+
+    # Tell PyTorch to use the GPU.    
+    device = torch.device("cuda")
+
+    print(f'There are {torch.cuda.device_count()} GPU(s) available.')
+
+    print(f'We will use the GPU: {torch.cuda.get_device_name(0)}')
+
+# If not...
+else:
+    print('No GPU available, using the CPU instead.')
+    device = torch.device("cpu")
+
 
 def print_config(path):
     with open(path, 'r') as f:
